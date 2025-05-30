@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt # Re-enabled for plotting
 import matplotlib.dates as mdates # Re-enabled for plotting
+import numpy as np # Added for np.isfinite
 
 def load_and_preprocess_data(file_path, asset_name):
     """
@@ -26,15 +27,15 @@ def load_and_preprocess_data(file_path, asset_name):
 def calculate_portfolio_returns(merged_df):
     """
     Calculates daily returns for the five defined portfolios.
-    Portfolio 1: QQQ_Return - IWM_Return (No leverage)
-    Portfolio 2: SPY_Return - IWM_Return (No leverage)
+    Portfolio 1: QQQ_Return - IWM_Return (No leverage in daily return calculation)
+    Portfolio 2: SPY_Return - IWM_Return (No leverage in daily return calculation)
     Portfolio 3: Long QQQ
     Portfolio 4: Long SPY
     Portfolio 5: Long IWM
     """
     portfolios = pd.DataFrame(index=merged_df.index)
 
-    # Changed from 2x leverage to 1x (no leverage)
+    # Daily returns are calculated without leverage here
     portfolios['P1_QQQ_vs_IWM'] = merged_df['QQQ_Return'] - merged_df['IWM_Return']
     portfolios['P2_SPY_vs_IWM'] = merged_df['SPY_Return'] - merged_df['IWM_Return']
     portfolios['P3_Long_QQQ'] = merged_df['QQQ_Return']
@@ -49,7 +50,41 @@ def analyze_portfolios(portfolio_returns, initial_investment=100):
     saves daily cumulative growth to a CSV file, and returns daily cumulative growth.
     """
     # Calculate daily cumulative growth
-    daily_cumulative_growth = (1 + portfolio_returns).cumprod() * initial_investment
+    daily_cumulative_growth = pd.DataFrame(index=portfolio_returns.index)
+
+    # Portfolio 1: 2x (QQQ - IWM) synthetic, non-compounded leverage on initial base
+    if 'P1_QQQ_vs_IWM' in portfolio_returns.columns:
+        # Daily unleveraged spread return
+        daily_spread_P1 = portfolio_returns['P1_QQQ_vs_IWM']
+        # Cumulative sum of these unleveraged spread returns
+        cumulative_sum_spread_P1 = daily_spread_P1.cumsum()
+        # Portfolio value = Initial_Base * (1 + 2 * Sum_of_Spread_Returns)
+        daily_cumulative_growth['P1_QQQ_vs_IWM'] = initial_investment * (1 + 2 * cumulative_sum_spread_P1)
+        # Max loss is initial investment; portfolio value cannot go below zero.
+        daily_cumulative_growth['P1_QQQ_vs_IWM'] = daily_cumulative_growth['P1_QQQ_vs_IWM'].clip(lower=0)
+
+    # Portfolio 2: 2x (SPY - IWM) synthetic, non-compounded leverage on initial base
+    if 'P2_SPY_vs_IWM' in portfolio_returns.columns:
+        # Daily unleveraged spread return
+        daily_spread_P2 = portfolio_returns['P2_SPY_vs_IWM']
+        # Cumulative sum of these unleveraged spread returns
+        cumulative_sum_spread_P2 = daily_spread_P2.cumsum()
+        # Portfolio value = Initial_Base * (1 + 2 * Sum_of_Spread_Returns)
+        daily_cumulative_growth['P2_SPY_vs_IWM'] = initial_investment * (1 + 2 * cumulative_sum_spread_P2)
+        # Max loss is initial investment; portfolio value cannot go below zero.
+        daily_cumulative_growth['P2_SPY_vs_IWM'] = daily_cumulative_growth['P2_SPY_vs_IWM'].clip(lower=0)
+
+    # Portfolio 3: Long QQQ (standard daily compounding)
+    if 'P3_Long_QQQ' in portfolio_returns.columns:
+        daily_cumulative_growth['P3_Long_QQQ'] = (1 + portfolio_returns['P3_Long_QQQ']).cumprod() * initial_investment
+
+    # Portfolio 4: Long SPY (standard daily compounding)
+    if 'P4_Long_SPY' in portfolio_returns.columns:
+        daily_cumulative_growth['P4_Long_SPY'] = (1 + portfolio_returns['P4_Long_SPY']).cumprod() * initial_investment
+
+    # Portfolio 5: Long IWM (standard daily compounding)
+    if 'P5_Long_IWM' in portfolio_returns.columns:
+        daily_cumulative_growth['P5_Long_IWM'] = (1 + portfolio_returns['P5_Long_IWM']).cumprod() * initial_investment
 
     # --- Create and save the CSV file for daily cumulative growth ---
     daily_cumulative_growth_for_csv = daily_cumulative_growth.copy()
@@ -69,27 +104,72 @@ def analyze_portfolios(portfolio_returns, initial_investment=100):
 
     # Weekly growth table (for console output)
     weekly_growth_table_console = daily_cumulative_growth.resample('W').last()
-
     print("\n--- Weekly Growth of $100 Initial Investment (Console Display) ---")
     print(weekly_growth_table_console.ffill().round(2))
 
-    extreme_days_results = {}
-    for portfolio_name in portfolio_returns.columns: # Use original portfolio_returns for daily % change
-        daily_returns_pct = portfolio_returns[portfolio_name] * 100
-        best_days = daily_returns_pct.nlargest(7)
-        worst_days = daily_returns_pct.nsmallest(7)
-        extreme_days_results[portfolio_name] = {
-            'best_days': best_days,
-            'worst_days': worst_days
-        }
+    # --- Best/Worst Performing Days and Worst Drawdown for each portfolio ---
+    # Calculate actual daily percentage returns from the daily_cumulative_growth
+    actual_daily_portfolio_returns = daily_cumulative_growth.pct_change()
+    # For the first day, pct_change is NaN. Calculate it based on initial_investment.
+    if not daily_cumulative_growth.empty and not actual_daily_portfolio_returns.empty:
+        if len(daily_cumulative_growth) > 0 and len(actual_daily_portfolio_returns) > 0: # Check if there's at least one row
+            first_day_values = daily_cumulative_growth.iloc[0]
+            # Calculate first day returns, ensuring initial_investment is not zero
+            if initial_investment != 0:
+                first_day_returns = (first_day_values / initial_investment) - 1
+            else: # Handle case where initial_investment is 0 (leads to NaNs or Infs)
+                first_day_returns = pd.Series(np.nan, index=first_day_values.index)
+            actual_daily_portfolio_returns.iloc[0] = first_day_returns
 
-        print(f"\n--- Extreme Performing Days for {portfolio_name} ---")
-        print("Top 7 Best Days (%):")
-        print(best_days.round(2))
-        print("\nTop 7 Worst Days (%):")
-        print(worst_days.round(2))
+    print("\n\n--- Portfolio Performance Metrics ---")
+    for portfolio_name in daily_cumulative_growth.columns: # Iterate over portfolios present in growth data
+        print(f"\n--- Metrics for {portfolio_name} ---")
 
-    return daily_cumulative_growth # Return the daily cumulative growth for plotting
+        # Best/Worst Days (based on actual daily % change of portfolio value)
+        if portfolio_name in actual_daily_portfolio_returns.columns and actual_daily_portfolio_returns[portfolio_name].notna().any():
+            daily_returns_pct = actual_daily_portfolio_returns[portfolio_name] * 100
+            # Clean out NaN or Inf values
+            daily_returns_pct_cleaned = daily_returns_pct.replace([np.inf, -np.inf], np.nan).dropna()
+
+            if not daily_returns_pct_cleaned.empty:
+                best_days = daily_returns_pct_cleaned.nlargest(7)
+                worst_days = daily_returns_pct_cleaned.nsmallest(7)
+                print("Top 7 Best Days (Actual Daily % Change of Portfolio Value):")
+                print(best_days.round(2))
+                print("\nTop 7 Worst Days (Actual Daily % Change of Portfolio Value):")
+                print(worst_days.round(2))
+            else:
+                print("Best/Worst Days: Not available (no valid daily returns data after cleaning).")
+        else:
+            print("Best/Worst Days: Not available (no daily returns data for this portfolio).")
+
+        # Worst Drawdown
+        portfolio_values = daily_cumulative_growth[portfolio_name]
+        # Ensure series is not empty and has some non-NaN values
+        if not portfolio_values.empty and portfolio_values.notna().any():
+            rolling_max = portfolio_values.cummax()
+            drawdown_series = pd.Series(index=portfolio_values.index, dtype=float)
+
+            for date_idx in portfolio_values.index:
+                current_val = portfolio_values[date_idx]
+                peak_val = rolling_max[date_idx]
+
+                if pd.isna(current_val) or pd.isna(peak_val): # Handle NaNs in input
+                    drawdown_series[date_idx] = np.nan
+                elif peak_val == 0: # Implies current_val is also 0 (due to cummax and clip(lower=0))
+                    drawdown_series[date_idx] = 0.0 # No drawdown if peak (and current) is 0
+                else:
+                    drawdown_series[date_idx] = (current_val / peak_val) - 1.0
+            
+            if drawdown_series.notna().any(): # Check if there's any valid drawdown calculated
+                current_worst_drawdown = drawdown_series.min() * 100 # as percentage
+                print(f"\nWorst Drawdown: {current_worst_drawdown:.2f}%")
+            else:
+                print("\nWorst Drawdown: Not available (drawdown series is all NaN).")
+        else:
+            print("\nWorst Drawdown: Not available (no portfolio value data).")
+
+    return daily_cumulative_growth
 
 def plot_daily_portfolio_growth(daily_cumulative_growth_df):
     """
