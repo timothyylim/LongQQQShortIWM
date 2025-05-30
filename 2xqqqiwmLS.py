@@ -265,7 +265,7 @@ def plot_daily_portfolio_growth(daily_cumulative_growth_df):
 
 def main():
     # --- User-configurable start date ---
-    USER_CONFIGURABLE_START_DATE = "2021-06-01"
+    USER_CONFIGURABLE_START_DATE = "2022-01-01"
     # --- End of User-configurable start date ---
 
     # Define file paths

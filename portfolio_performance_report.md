@@ -7,35 +7,35 @@
 #### Top 7 Best Days
 | Date       |   Performance (%) |
 |:-----------|------------------:|
-| 2021-06-17 |              4.76 |
-| 2023-05-25 |              4.28 |
-| 2021-06-10 |              4    |
-| 2021-07-02 |              3.94 |
-| 2023-03-13 |              3.89 |
-| 2021-06-28 |              3.88 |
-| 2021-07-22 |              3.79 |
+| 2023-05-25 |              5.66 |
+| 2023-03-13 |              5.57 |
+| 2022-11-30 |              5.04 |
+| 2023-03-15 |              4.79 |
+| 2022-07-27 |              4.59 |
+| 2023-03-17 |              4.57 |
+| 2025-04-09 |              4.42 |
 
 #### Top 7 Worst Days
 | Date       |   Performance (%) |
 |:-----------|------------------:|
-| 2024-07-11 |             -5.7  |
-| 2022-10-26 |             -4.66 |
-| 2023-06-07 |             -4.28 |
-| 2021-09-27 |             -3.75 |
-| 2023-11-14 |             -3.65 |
-| 2024-07-16 |             -3.61 |
-| 2021-11-01 |             -3.57 |
+| 2024-07-11 |             -6.96 |
+| 2022-10-26 |             -6.83 |
+| 2023-06-07 |             -5.62 |
+| 2022-10-27 |             -5    |
+| 2023-06-02 |             -4.6  |
+| 2023-11-14 |             -4.56 |
+| 2024-07-16 |             -4.49 |
 
 ### Maximum Drawdown Analysis
 
-- **Max Drawdown:** -28.78%
+- **Max Drawdown:** -38.88%
 - **Drawdown Start Date (Peak):** 2022-02-02
 - **Drawdown End Date (Trough):** 2022-11-03
 
 #### Performance of Other Portfolios During This Drawdown:
 | Portfolio     |   Performance During Drawdown (%) |
 |:--------------|----------------------------------:|
-| P2_SPY_vs_IWM |                            -12.08 |
+| P2_SPY_vs_IWM |                            -14.87 |
 | P3_Long_QQQ   |                            -29.32 |
 | P4_Long_SPY   |                            -18.9  |
 | P5_Long_IWM   |                            -12.48 |
@@ -49,35 +49,35 @@
 #### Top 7 Best Days
 | Date       |   Performance (%) |
 |:-----------|------------------:|
-| 2024-02-13 |              3.63 |
-| 2021-07-02 |              3.44 |
-| 2021-07-22 |              3.29 |
-| 2021-07-14 |              3.08 |
-| 2022-02-02 |              2.93 |
-| 2021-07-13 |              2.88 |
-| 2021-06-10 |              2.82 |
+| 2024-02-13 |              4.39 |
+| 2022-02-02 |              3.63 |
+| 2022-01-27 |              3.33 |
+| 2023-03-06 |              3.2  |
+| 2024-01-03 |              3.18 |
+| 2024-08-01 |              2.99 |
+| 2022-01-05 |              2.98 |
 
 #### Top 7 Worst Days
 | Date       |   Performance (%) |
 |:-----------|------------------:|
-| 2024-07-11 |             -5.18 |
-| 2023-11-14 |             -4.39 |
-| 2021-11-01 |             -4.22 |
-| 2024-11-06 |             -4.21 |
-| 2021-12-17 |             -3.56 |
-| 2024-07-16 |             -3.56 |
-| 2023-06-06 |             -3.33 |
+| 2024-07-11 |             -6.1  |
+| 2023-11-14 |             -5.22 |
+| 2024-11-06 |             -5.05 |
+| 2024-07-16 |             -4.25 |
+| 2023-06-06 |             -4.06 |
+| 2023-12-14 |             -4.03 |
+| 2023-06-02 |             -3.61 |
 
 ### Maximum Drawdown Analysis
 
-- **Max Drawdown:** -15.13%
+- **Max Drawdown:** -17.82%
 - **Drawdown Start Date (Peak):** 2024-07-05
 - **Drawdown End Date (Trough):** 2024-07-26
 
 #### Performance of Other Portfolios During This Drawdown:
 | Portfolio     |   Performance During Drawdown (%) |
 |:--------------|----------------------------------:|
-| P1_QQQ_vs_IWM |                            -17.74 |
+| P1_QQQ_vs_IWM |                            -21.67 |
 | P3_Long_QQQ   |                             -6.68 |
 | P4_Long_SPY   |                             -1.83 |
 | P5_Long_IWM   |                             11.6  |
@@ -112,17 +112,17 @@
 
 ### Maximum Drawdown Analysis
 
-- **Max Drawdown:** -35.64%
-- **Drawdown Start Date (Peak):** 2021-11-19
+- **Max Drawdown:** -35.27%
+- **Drawdown Start Date (Peak):** 2022-01-03
 - **Drawdown End Date (Trough):** 2022-12-28
 
 #### Performance of Other Portfolios During This Drawdown:
 | Portfolio     |   Performance During Drawdown (%) |
 |:--------------|----------------------------------:|
-| P1_QQQ_vs_IWM |                            -18.03 |
-| P2_SPY_vs_IWM |                             13.98 |
-| P4_Long_SPY   |                            -19.68 |
-| P5_Long_IWM   |                            -26.75 |
+| P1_QQQ_vs_IWM |                            -28.91 |
+| P2_SPY_vs_IWM |                              6.39 |
+| P4_Long_SPY   |                            -21.16 |
+| P5_Long_IWM   |                            -24.35 |
 
 ---
 
@@ -161,8 +161,8 @@
 #### Performance of Other Portfolios During This Drawdown:
 | Portfolio     |   Performance During Drawdown (%) |
 |:--------------|----------------------------------:|
-| P1_QQQ_vs_IWM |                            -17.17 |
-| P2_SPY_vs_IWM |                             -0.4  |
+| P1_QQQ_vs_IWM |                            -23.52 |
+| P2_SPY_vs_IWM |                             -0.51 |
 | P3_Long_QQQ   |                            -34.62 |
 | P5_Long_IWM   |                            -25.81 |
 
@@ -196,17 +196,17 @@
 
 ### Maximum Drawdown Analysis
 
-- **Max Drawdown:** -33.10%
-- **Drawdown Start Date (Peak):** 2021-11-08
+- **Max Drawdown:** -27.99%
+- **Drawdown Start Date (Peak):** 2022-01-03
 - **Drawdown End Date (Trough):** 2023-10-27
 
 #### Performance of Other Portfolios During This Drawdown:
 | Portfolio     |   Performance During Drawdown (%) |
 |:--------------|----------------------------------:|
-| P1_QQQ_vs_IWM |                             45.21 |
-| P2_SPY_vs_IWM |                             46.97 |
-| P3_Long_QQQ   |                            -13.28 |
-| P4_Long_SPY   |                            -12.42 |
+| P1_QQQ_vs_IWM |                             38.05 |
+| P2_SPY_vs_IWM |                             32.5  |
+| P3_Long_QQQ   |                            -14.05 |
+| P4_Long_SPY   |                            -14.03 |
 
 ---
 
